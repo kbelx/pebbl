@@ -1,2 +1,27 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+### Obsidian ###
+# config dir
+.obsidian/
+
+### VirtualEnv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+.venv
+env
+pip-selfcheck.json
+
+# End of https://www.toptal.com/developers/gitignore/api/obsidian,virtualenv
+
+__pycache__/
+*.pyc
+*.log
+db.sqlite3
+#.vscode/
+.idea/+.

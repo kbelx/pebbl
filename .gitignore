@@ -1,0 +1,57 @@
+# Ambiente Virtual
+env/
+venv/
+ENV/
+VENV/
+.venv
+
+# Arquivos de Python compilado
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
+test_data/
+
+# Banco de dados
+*.json
+
+# Logs
+logs/
+*.log
+
+# Exportações
+*.csv
+*.txt
+
+# Sistema operacional
+Thumbs.db
+.DS_Store

@@ -10,7 +10,7 @@
 
 from datetime import datetime
 import re
-from backend.utils.validators import validar_cpf, validar_rg, validar_email, validar_data, sanitizar_texto
+from app.backend.utils.validators import validar_cpf, validar_rg, validar_email, validar_data, sanitizar_texto
 
 
 class Contato:

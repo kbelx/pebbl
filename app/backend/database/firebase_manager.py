@@ -1,0 +1,351 @@
+################################################################################
+#  
+#	FILE: 	<firebase_manager.py>
+#	BY	: 	<kbelx_>
+#	FOR	:	<HARRP_>
+#	ON	:	<09 Dezembro 2025>
+#	WHAT:	<Gerenciador de banco de dados usando Firebase Realtime Database>
+#
+################################################################################
+
+import firebase_admin
+from firebase_admin import credentials, db
+from typing import List, Optional
+from app.backend.models.contato import Contato
+from app.backend.utils.logger import Logger
+import os
+from pathlib import Path
+
+logger = Logger.obter_logger("pebbl.firebase")
+
+
+class FirebaseManager:
+    """
+    Gerenciador de banco de dados para contatos usando Firebase Realtime Database.
+    
+    Fornece operações CRUD completas e funcionalidades de busca e exportação.
+    Mantém a mesma interface do DatabaseManager JSON.
+    """
+    
+    _instance = None  # Singleton pattern para uma única conexão
+    
+    def __new__(cls, credentials_path: str = None):
+        """Implementa singleton para evitar múltiplas inicializações."""
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._inicializado = False
+        return cls._instance
+    
+    def __init__(self, credentials_path: str = None):
+        """
+        Inicializa o gerenciador de banco de dados Firebase.
+        
+        Args:
+            credentials_path (str): Caminho para o arquivo serviceAccountKey.json
+        """
+        if self._inicializado:
+            return
+            
+        try:
+            if credentials_path is None:
+                # Procura por arquivo de credenciais na raiz do projeto
+                base_dir = Path(__file__).parent.parent.parent.parent
+                credentials_path = str(base_dir / 'serviceAccountKey.json')
+            
+            # Verifica se o arquivo de credenciais existe
+            if not os.path.exists(credentials_path):
+                raise FileNotFoundError(
+                    f"Arquivo de credenciais não encontrado em {credentials_path}. "
+                    f"Faça download do arquivo serviceAccountKey.json do Firebase Console."
+                )
+            
+            # Inicializa Firebase Admin SDK
+            cred = credentials.Certificate(credentials_path)
+            firebase_admin.initialize_app(cred, {
+                'databaseURL': self._obter_database_url()
+            })
+            
+            self.db = db
+            self.contatos: List[Contato] = []
+            self.ultimo_id: int = 0
+            
+            self._carregar_dados()
+            logger.info("Firebase Manager inicializado com sucesso")
+            self._inicializado = True
+            
+        except Exception as e:
+            logger.error(f"Erro ao inicializar Firebase: {e}")
+            raise Exception(f"Erro ao inicializar Firebase: {e}")
+    
+    @staticmethod
+    def _obter_database_url() -> str:
+        """
+        Obtém a URL do banco de dados Firebase das variáveis de ambiente.
+        
+        Returns:
+            str: URL do banco de dados
+        """
+        url = os.getenv('FIREBASE_DATABASE_URL')
+        if not url:
+            raise ValueError(
+                "Variável de ambiente FIREBASE_DATABASE_URL não definida. "
+                "Configure-a com a URL do seu banco de dados Firebase."
+            )
+        return url
+    
+    def _carregar_dados(self):
+        """Carrega dados do Firebase Realtime Database."""
+        try:
+            ref = self.db.reference('pebbl/contatos')
+            data = ref.get()
+            
+            if data:
+                self.ultimo_id = data.get('ultimo_id', 0)
+                contatos_data = data.get('lista', [])
+                self.contatos = [Contato.from_dict(c) for c in contatos_data]
+                logger.debug(f"Carregados {len(self.contatos)} contatos do Firebase")
+            else:
+                self.ultimo_id = 0
+                self.contatos = []
+                self._salvar_dados()  # Cria estrutura inicial
+                logger.info("Nenhum dado encontrado. Criada estrutura inicial.")
+        except Exception as e:
+            logger.error(f"Erro ao carregar dados do Firebase: {e}")
+            raise Exception(f"Erro ao carregar dados do Firebase: {e}")
+    
+    def _salvar_dados(self):
+        """Salva dados no Firebase Realtime Database."""
+        try:
+            data = {
+                'versao': '1.0',
+                'ultimo_id': self.ultimo_id,
+                'lista': [c.to_dict() for c in self.contatos]
+            }
+            
+            ref = self.db.reference('pebbl/contatos')
+            ref.set(data)
+            logger.debug(f"Dados salvos no Firebase ({len(self.contatos)} contatos)")
+        except Exception as e:
+            logger.error(f"Erro ao salvar dados no Firebase: {e}")
+            raise Exception(f"Erro ao salvar dados no Firebase: {e}")
+    
+    def _gerar_id(self) -> int:
+        """Gera um novo ID único."""
+        self.ultimo_id += 1
+        self._salvar_dados()  # Salva imediatamente para garantir consistência
+        return self.ultimo_id
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # OPERAÇÕES CREATE
+    # ═══════════════════════════════════════════════════════════════════════════
+    
+    def adicionar_contato(self, contato: Contato) -> tuple[bool, str]:
+        """
+        Adiciona um novo contato ao banco de dados.
+        
+        Args:
+            contato (Contato): Objeto Contato a ser adicionado
+            
+        Returns:
+            tuple[bool, str]: (sucesso, mensagem)
+        """
+        try:
+            contato.id = self._gerar_id()
+            self.contatos.append(contato)
+            self._salvar_dados()
+            logger.info(f"Contato adicionado: {contato.nome_completo} (ID: {contato.id})")
+            return True, f"Contato '{contato.nome_completo}' adicionado com sucesso!"
+        except Exception as e:
+            logger.error(f"Erro ao adicionar contato: {e}")
+            return False, f"Erro ao adicionar contato: {e}"
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # OPERAÇÕES READ
+    # ═══════════════════════════════════════════════════════════════════════════
+    
+    def obter_contato_por_id(self, contato_id: int) -> Optional[Contato]:
+        """
+        Obtém um contato pelo ID.
+        
+        Args:
+            contato_id (int): ID do contato
+            
+        Returns:
+            Optional[Contato]: Objeto Contato ou None
+        """
+        for contato in self.contatos:
+            if contato.id == contato_id:
+                return contato
+        return None
+    
+    def listar_contatos(self) -> List[Contato]:
+        """
+        Lista todos os contatos.
+        
+        Returns:
+            List[Contato]: Lista de todos os contatos
+        """
+        return self.contatos.copy()
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # OPERAÇÕES UPDATE
+    # ═══════════════════════════════════════════════════════════════════════════
+    
+    def atualizar_contato(self, contato_id: int, dados_atualizados: dict) -> tuple[bool, str]:
+        """
+        Atualiza os dados de um contato existente.
+        
+        Args:
+            contato_id (int): ID do contato a ser atualizado
+            dados_atualizados (dict): Dicionário com os dados a atualizar
+            
+        Returns:
+            tuple[bool, str]: (sucesso, mensagem)
+        """
+        try:
+            contato = self.obter_contato_por_id(contato_id)
+            if not contato:
+                return False, f"Contato com ID {contato_id} não encontrado"
+            
+            # Atualiza atributos do contato
+            for chave, valor in dados_atualizados.items():
+                if hasattr(contato, chave):
+                    setattr(contato, chave, valor)
+            
+            self._salvar_dados()
+            logger.info(f"Contato atualizado: {contato.nome_completo} (ID: {contato_id})")
+            return True, f"Contato atualizado com sucesso!"
+        except Exception as e:
+            logger.error(f"Erro ao atualizar contato: {e}")
+            return False, f"Erro ao atualizar contato: {e}"
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # OPERAÇÕES DELETE
+    # ═══════════════════════════════════════════════════════════════════════════
+    
+    def deletar_contato(self, contato_id: int) -> tuple[bool, str]:
+        """
+        Deleta um contato pelo ID.
+        
+        Args:
+            contato_id (int): ID do contato a ser deletado
+            
+        Returns:
+            tuple[bool, str]: (sucesso, mensagem)
+        """
+        try:
+            contato = self.obter_contato_por_id(contato_id)
+            if not contato:
+                return False, f"Contato com ID {contato_id} não encontrado"
+            
+            self.contatos.remove(contato)
+            self._salvar_dados()
+            logger.info(f"Contato deletado: {contato.nome_completo} (ID: {contato_id})")
+            return True, f"Contato '{contato.nome_completo}' deletado com sucesso!"
+        except Exception as e:
+            logger.error(f"Erro ao deletar contato: {e}")
+            return False, f"Erro ao deletar contato: {e}"
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # OPERAÇÕES SEARCH
+    # ═══════════════════════════════════════════════════════════════════════════
+    
+    def buscar_por_nome(self, nome: str) -> List[Contato]:
+        """
+        Busca contatos pelo nome (busca parcial case-insensitive).
+        
+        Args:
+            nome (str): Nome ou parte do nome a buscar
+            
+        Returns:
+            List[Contato]: Lista de contatos encontrados
+        """
+        nome_lower = nome.lower()
+        return [c for c in self.contatos if nome_lower in c.nome_completo.lower()]
+    
+    def buscar_por_email(self, email: str) -> Optional[Contato]:
+        """
+        Busca um contato pelo email.
+        
+        Args:
+            email (str): Email a buscar
+            
+        Returns:
+            Optional[Contato]: Contato encontrado ou None
+        """
+        for contato in self.contatos:
+            if contato.email.lower() == email.lower():
+                return contato
+        return None
+    
+    def buscar_por_telefone(self, telefone: str) -> Optional[Contato]:
+        """
+        Busca um contato pelo telefone.
+        
+        Args:
+            telefone (str): Telefone a buscar
+            
+        Returns:
+            Optional[Contato]: Contato encontrado ou None
+        """
+        for contato in self.contatos:
+            if contato.telefone == telefone:
+                return contato
+        return None
+    
+    def buscar_por_cpf(self, cpf: str) -> Optional[Contato]:
+        """
+        Busca um contato pelo CPF.
+        
+        Args:
+            cpf (str): CPF a buscar
+            
+        Returns:
+            Optional[Contato]: Contato encontrado ou None
+        """
+        for contato in self.contatos:
+            if contato.cpf == cpf:
+                return contato
+        return None
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # OPERAÇÕES EXPORT
+    # ═══════════════════════════════════════════════════════════════════════════
+    
+    def exportar_json(self, caminho_arquivo: str) -> tuple[bool, str]:
+        """
+        Exporta todos os contatos para um arquivo JSON.
+        
+        Args:
+            caminho_arquivo (str): Caminho do arquivo de destino
+            
+        Returns:
+            tuple[bool, str]: (sucesso, mensagem)
+        """
+        try:
+            import json
+            data = {
+                'versao': '1.0',
+                'quantidade': len(self.contatos),
+                'contatos': [c.to_dict() for c in self.contatos]
+            }
+            with open(caminho_arquivo, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            logger.info(f"Contatos exportados para {caminho_arquivo}")
+            return True, f"Contatos exportados com sucesso para {caminho_arquivo}"
+        except Exception as e:
+            logger.error(f"Erro ao exportar contatos: {e}")
+            return False, f"Erro ao exportar contatos: {e}"
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # OPERAÇÕES STAT
+    # ═══════════════════════════════════════════════════════════════════════════
+    
+    def obter_total_contatos(self) -> int:
+        """
+        Obtém o número total de contatos.
+        
+        Returns:
+            int: Quantidade de contatos
+        """
+        return len(self.contatos)

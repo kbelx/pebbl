@@ -8,10 +8,11 @@
 #
 ################################################################################
 
-from backend.models.contato import Contato
-from backend.database.database_manager import DatabaseManager
 from typing import List, Optional, Tuple
+from app.backend.models.contato import Contato
+from app.backend.database.firebase_manager import FirebaseManager
 
+#db = FirebaseManager()
 
 class ContatoController:
     """
@@ -23,7 +24,7 @@ class ContatoController:
     
     def __init__(self):
         """Inicializa o controlador com uma instância do DatabaseManager."""
-        self.db = DatabaseManager()
+        self.db = FirebaseManager()
     
     # ═══════════════════════════════════════════════════════════════════════════
     # OPERAÇÕES DE ADIÇÃO
@@ -90,7 +91,7 @@ class ContatoController:
         Returns:
             List[Contato]: Lista de todos os contatos
         """
-        return self.db.listar_todos()
+        return self.db.listar_contatos()
     
     def obter_contato_por_id(self, contato_id: int) -> Optional[Contato]:
         """

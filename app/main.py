@@ -18,10 +18,10 @@ from typing import Optional
 import sys
 import os
 
-# Adicionar diretório atual ao path para importar módulos do projeto
-sys.path.append('app')
+# Adicionar diretório raiz ao path para importar módulos do projeto
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from backend.controller.contato_controller import ContatoController
+from app.backend.controller.contato_controller import ContatoController
 
 # Inicializar Typer e Rich
 app = typer.Typer(

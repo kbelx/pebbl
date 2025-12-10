@@ -103,7 +103,7 @@ class ContatoController:
         Returns:
             Optional[Contato]: Contato encontrado ou None
         """
-        return self.db.buscar_por_id(contato_id)
+        return self.db.obter_contato_por_id(contato_id)
     
     def buscar_contatos_por_nome(self, nome: str) -> List[Contato]:
         """
@@ -172,7 +172,7 @@ class ContatoController:
         Returns:
             Tuple[bool, str]: (sucesso, mensagem)
         """
-        return self.db.remover_contato(contato_id)
+        return self.db.deletar_contato(contato_id)
     
     def limpar_todos_contatos(self) -> Tuple[bool, str]:
         """

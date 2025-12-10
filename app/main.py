@@ -14,9 +14,13 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt, Confirm
 from rich import print as rprint
+from rich.text import Text
+from rich.columns import Columns
+from rich.align import Align
 from typing import Optional
 import sys
 import os
+import platform
 
 # Adicionar diretório raiz ao path para importar módulos do projeto
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -33,6 +37,19 @@ console = Console()
 controller = ContatoController()
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# UTILITÁRIOS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def limpar_tela():
+    """Limpa a tela do terminal de forma confiável."""
+    os.system("cls" if platform.system() == "Windows" else "clear")
+
+    # if platform.system() == "Windows":
+    #     os.system("cls")
+    # else:
+    #     os.system("clear")
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # COMANDOS
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -41,24 +58,26 @@ def adicionar():
     """
     Adiciona um novo contato através de um formulário interativo.
     """
-    console.print(Panel.fit("[bold cyan]Adicionar Novo Contato[/bold cyan]", border_style="cyan"))
+    limpar_tela()
+    console.print(Panel.fit("[bold cyan]➕ Adicionar Novo Contato[/bold cyan]", border_style="cyan", padding=(0, 2)))
     
-    nome = Prompt.ask("[bold]Nome completo[/bold]")
+    nome = Prompt.ask("[bold cyan]Nome completo[/bold cyan]")
     if not nome:
-        console.print("[bold red]Erro:[/bold red] Nome é obrigatório!")
+        console.print("[bold red]❌ Erro:[/bold red] Nome é obrigatório!")
         return
 
-    data_nasc = Prompt.ask("Data de nascimento (DD/MM/AAAA)", default="")
-    email = Prompt.ask("Email", default="")
-    telefone = Prompt.ask("Telefone", default="")
-    endereco = Prompt.ask("Endereço", default="")
-    nome_pai = Prompt.ask("Nome do Pai", default="")
-    nome_mae = Prompt.ask("Nome da Mãe", default="")
-    cpf = Prompt.ask("CPF", default="")
-    rg = Prompt.ask("RG", default="")
-    notas = Prompt.ask("Notas", default="")
+    data_nasc = Prompt.ask("[dim]Data de nascimento (DD/MM/AAAA)[/dim]", default="")
+    email = Prompt.ask("[dim]Email[/dim]", default="")
+    telefone = Prompt.ask("[dim]Telefone[/dim]", default="")
+    endereco = Prompt.ask("[dim]Endereço[/dim]", default="")
+    nome_pai = Prompt.ask("[dim]Nome do Pai[/dim]", default="")
+    nome_mae = Prompt.ask("[dim]Nome da Mãe[/dim]", default="")
+    cpf = Prompt.ask("[dim]CPF[/dim]", default="")
+    rg = Prompt.ask("[dim]RG[/dim]", default="")
+    notas = Prompt.ask("[dim]Notas[/dim]", default="")
 
-    if Confirm.ask("Salvar este contato?"):
+    console.print()
+    if Confirm.ask("[bold]✅ Salvar este contato?[/bold]"):
         sucesso, msg = controller.criar_contato(
             nome_completo=nome,
             data_nascimento=data_nasc,
@@ -229,57 +248,87 @@ def exportar(formato: str = typer.Option("csv", help="Formato de exportação: c
 def menu_interativo():
     """Exibe o menu principal interativo."""
     while True:
-        console.clear()
-        console.print(Panel.fit("[bold cyan]PEBBL_ - Menu Principal[/bold cyan]", border_style="cyan"))
+        limpar_tela()
         
-        console.print("[1] [bold]Adicionar[/bold] novo contato")
-        console.print("[2] [bold]Listar[/bold] todos os contatos")
-        console.print("[3] [bold]Buscar[/bold] contato")
-        console.print("[4] [bold]Modificar[/bold] contato")
-        console.print("[5] [bold]Remover[/bold] contato")
-        console.print("[6] [bold]Exportar[/bold] dados")
-        console.print("[0] [bold red]Sair[/bold red]")
+        # Cabeçalho estilizado
+        header = Panel(
+            "[bold cyan]╔════════════════════════════════════╗\n"
+            "║     PEBBL_ - Gerenciador de         ║\n"
+            "║        Contatos v1.0                ║\n"
+            "╚════════════════════════════════════╝[/bold cyan]",
+            border_style="cyan",
+            padding=(1, 2),
+            expand=False
+        )
+        
+        # Menu como tabela
+        menu_table = Table(show_header=False, show_footer=False, padding=(0, 2), border_style="dim cyan")
+        menu_table.add_column(style="cyan", no_wrap=True, width=8)
+        menu_table.add_column(style="white")
+        
+        menu_items = [
+            ("[ 1 ]", "[bold green]➕ Adicionar[/bold green] novo contato"),
+            ("[ 2 ]", "[bold blue]📋 Listar[/bold blue] todos os contatos"),
+            ("[ 3 ]", "[bold yellow]🔍 Buscar[/bold yellow] contato"),
+            ("[ 4 ]", "[bold magenta]✏️  Modificar[/bold magenta] contato"),
+            ("[ 5 ]", "[bold red]❌ Remover[/bold red] contato"),
+            ("[ 6 ]", "[bold cyan]💾 Exportar[/bold cyan] dados"),
+            ("[ 0 ]", "[bold red]🚪 Sair[/bold red]"),
+        ]
+        
+        for num, desc in menu_items:
+            menu_table.add_row(num, desc)
+        
+        # Centralizar conteúdo
+        console.print(Align.center(header))
+        console.print()
+        console.print(Align.center(menu_table))
         console.print()
         
-        opcao = Prompt.ask("Escolha uma opção", choices=["1", "2", "3", "4", "5", "6", "0"], default="0")
+        opcao = Prompt.ask("[bold cyan]➤ Escolha uma opção[/bold cyan]", choices=["1", "2", "3", "4", "5", "6", "0"], default="0")
         
         if opcao == "0":
-            console.print("[yellow]Saindo... Até logo![/yellow]")
+            limpar_tela()
+            console.print(Align.center(Panel.fit(
+                "[bold yellow]👋 Saindo... Até logo![/bold yellow]",
+                border_style="yellow",
+                padding=(1, 3)
+            )))
             break
             
         elif opcao == "1":
             adicionar()
-            Prompt.ask("\nPressione Enter para voltar ao menu")
+            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
             
         elif opcao == "2":
             listar()
-            Prompt.ask("\nPressione Enter para voltar ao menu")
+            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
             
         elif opcao == "3":
-            termo = Prompt.ask("Digite o nome para buscar")
+            termo = Prompt.ask("[bold]Digite o nome para buscar[/bold]")
             buscar(termo)
-            Prompt.ask("\nPressione Enter para voltar ao menu")
+            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
             
         elif opcao == "4":
-            id_str = Prompt.ask("ID do contato a modificar")
+            id_str = Prompt.ask("[bold]ID do contato a modificar[/bold]")
             if id_str.isdigit():
                 modificar(int(id_str))
             else:
-                console.print("[red]ID inválido![/red]")
-            Prompt.ask("\nPressione Enter para voltar ao menu")
+                console.print("[red]❌ ID inválido![/red]")
+            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
             
         elif opcao == "5":
-            id_str = Prompt.ask("ID do contato a remover")
+            id_str = Prompt.ask("[bold]ID do contato a remover[/bold]")
             if id_str.isdigit():
                 remover(int(id_str))
             else:
-                console.print("[red]ID inválido![/red]")
-            Prompt.ask("\nPressione Enter para voltar ao menu")
+                console.print("[red]❌ ID inválido![/red]")
+            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
             
         elif opcao == "6":
-            formato = Prompt.ask("Formato", choices=["csv", "txt"], default="csv")
+            formato = Prompt.ask("[bold]Formato[/bold]", choices=["csv", "txt"], default="csv")
             exportar(formato)
-            Prompt.ask("\nPressione Enter para voltar ao menu")
+            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
 
 @app.callback(invoke_without_command=True)
 def main(ctx: typer.Context):

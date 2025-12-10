@@ -135,6 +135,33 @@ class FirebaseManager:
         self._salvar_dados()  # Salva imediatamente para garantir consistência
         return self.ultimo_id
     
+    def _realocarealocar_ids(self):
+        """
+        Realoca os IDs dos contatos de acordo com ordem alfabética do nome.
+        Útil quando contatos são deletados e deixam lacunas nos IDs.
+        """
+        try:
+            if not self.contatos:
+                self.ultimo_id = 0
+                self._salvar_dados()
+                logger.info("Nenhum contato. IDs realocados.")
+                return
+            
+            # Ordena contatos por nome (ordem alfabética)
+            self.contatos.sort(key=lambda c: c.nome_completo.lower())
+            
+            # Realoca IDs sequencialmente baseado na ordem alfabética
+            for idx, contato in enumerate(self.contatos, 1):
+                contato.id = idx
+            
+            # Atualiza o último ID
+            self.ultimo_id = len(self.contatos)
+            self._salvar_dados()
+            logger.info(f"IDs realocados com sucesso (ordem alfabética). Total: {len(self.contatos)}")
+        except Exception as e:
+            logger.error(f"Erro ao realoccar IDs: {e}")
+            raise Exception(f"Erro ao realoccar IDs: {e}")
+    
     # ═══════════════════════════════════════════════════════════════════════════
     # OPERAÇÕES CREATE
     # ═══════════════════════════════════════════════════════════════════════════
@@ -180,12 +207,13 @@ class FirebaseManager:
     
     def listar_contatos(self) -> List[Contato]:
         """
-        Lista todos os contatos.
+        Lista todos os contatos ordenados por nome (ordem alfabética).
         
         Returns:
-            List[Contato]: Lista de todos os contatos
+            List[Contato]: Lista de todos os contatos ordenados alfabeticamente
         """
-        return self.contatos.copy()
+        contatos_ordenados = sorted(self.contatos, key=lambda c: c.nome_completo.lower())
+        return contatos_ordenados
     
     # ═══════════════════════════════════════════════════════════════════════════
     # OPERAÇÕES UPDATE
@@ -225,7 +253,7 @@ class FirebaseManager:
     
     def deletar_contato(self, contato_id: int) -> tuple[bool, str]:
         """
-        Deleta um contato pelo ID.
+        Deleta um contato pelo ID e realoca os IDs dos demais contatos.
         
         Args:
             contato_id (int): ID do contato a ser deletado
@@ -238,10 +266,14 @@ class FirebaseManager:
             if not contato:
                 return False, f"Contato com ID {contato_id} não encontrado"
             
+            nome_contato = contato.nome_completo
             self.contatos.remove(contato)
-            self._salvar_dados()
-            logger.info(f"Contato deletado: {contato.nome_completo} (ID: {contato_id})")
-            return True, f"Contato '{contato.nome_completo}' deletado com sucesso!"
+            
+            # Realoca IDs dos contatos restantes
+            self._realocarealocar_ids()
+            
+            logger.info(f"Contato deletado: {nome_contato} (ID: {contato_id}). IDs realocados.")
+            return True, f"Contato '{nome_contato}' deletado com sucesso!"
         except Exception as e:
             logger.error(f"Erro ao deletar contato: {e}")
             return False, f"Erro ao deletar contato: {e}"
@@ -349,3 +381,27 @@ class FirebaseManager:
             int: Quantidade de contatos
         """
         return len(self.contatos)
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # OPERAÇÕES DE MANUTENÇÃO
+    # ═══════════════════════════════════════════════════════════════════════════
+    
+    def realoccar_ids_manual(self) -> tuple[bool, str]:
+        """
+        Realoca manualmente os IDs dos contatos para que sejam sequenciais.
+        Útil para reorganizar IDs após múltiplas deleções.
+        
+        Returns:
+            tuple[bool, str]: (sucesso, mensagem)
+        """
+        try:
+            total_antes = self.ultimo_id
+            self._realocarealocar_ids()
+            total_depois = len(self.contatos)
+            
+            msg = f"IDs realocados! Antes: {total_antes} | Depois: {total_depois}"
+            logger.info(msg)
+            return True, msg
+        except Exception as e:
+            logger.error(f"Erro ao realoccar IDs manualmente: {e}")
+            return False, f"Erro ao realoccar IDs: {e}"

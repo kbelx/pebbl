@@ -4,12 +4,14 @@
 import os
 from pathlib import Path
 
-# Carregar variáveis de ambiente do .env
+# Carregar variáveis de ambiente do .env ANTES de importar a aplicação
 env_file = Path('.env')
 if env_file.exists():
+
     with open(env_file, 'r') as f:
         for line in f:
             line = line.strip()
+
             if line and not line.startswith('#') and '=' in line:
                 key, value = line.split('=', 1)
                 os.environ[key.strip()] = value.strip()

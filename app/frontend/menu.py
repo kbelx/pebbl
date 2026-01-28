@@ -1,84 +1,62 @@
-def menu_interativo():
+from rich.table import Table
+from rich.panel import Panel
+from rich.prompt import Prompt
+from rich.align import Align
+
+
+MENU_ITEMS = [
+    ("1", "[bold green]Adicionar[/bold green] novo contato"),
+    ("2", "[bold blue]Listar[/bold blue] todos os contatos"),
+    ("3", "[bold yellow]Buscar[/bold yellow] contato"),
+    ("4", "[bold magenta]Modificar[/bold magenta] contato"),
+    ("5", "[bold red]Remover[/bold red] contato"),
+    ("6", "[bold cyan]Exportar[/bold cyan] dados"),
+    ("0", "[bold red]Sair[/bold red]"),
+]
+
+
+def menu_interativo(console, limpar_tela, handlers):
     """Exibe o menu principal interativo."""
     while True:
         limpar_tela()
-        
-        # Cabeçalho estilizado
-        header = Panel(
-            "[bold cyan]╔════════════════════════════════════╗\n"
-            "║     PEBBL_ - Gerenciador de         ║\n"
-            "║        Contatos v1.0                ║\n"
-            "╚════════════════════════════════════╝[/bold cyan]",
+
+        header_texto = "[bold cyan]PEBBL_ - Gerenciador de Contatos[/bold cyan]"
+        header = Panel.fit(
+            header_texto,
             border_style="cyan",
             padding=(1, 2),
-            expand=False
         )
-        
-        # Menu como tabela
+
         menu_table = Table(show_header=False, show_footer=False, padding=(0, 2), border_style="dim cyan")
         menu_table.add_column(style="cyan", no_wrap=True, width=8)
         menu_table.add_column(style="white")
-        
-        menu_items = [
-            ("[ 1 ]", "[bold green]➕ Adicionar[/bold green] novo contato"),
-            ("[ 2 ]", "[bold blue]📋 Listar[/bold blue] todos os contatos"),
-            ("[ 3 ]", "[bold yellow]🔍 Buscar[/bold yellow] contato"),
-            ("[ 4 ]", "[bold magenta]✏️  Modificar[/bold magenta] contato"),
-            ("[ 5 ]", "[bold red]❌ Remover[/bold red] contato"),
-            ("[ 6 ]", "[bold cyan]💾 Exportar[/bold cyan] dados"),
-            ("[ 0 ]", "[bold red]🚪 Sair[/bold red]"),
-        ]
-        
-        for num, desc in menu_items:
-            menu_table.add_row(num, desc)
-        
-        # Centralizar conteúdo
+
+        for opcao, descricao in MENU_ITEMS:
+            menu_table.add_row(f"[ {opcao} ]", descricao)
+
         console.print(Align.center(header))
         console.print()
         console.print(Align.center(menu_table))
         console.print()
-        
-        opcao = Prompt.ask("[bold cyan]➤ Escolha uma opção[/bold cyan]", choices=["1", "2", "3", "4", "5", "6", "0"], default="0")
-        
+
+        opcoes_validas = [item[0] for item in MENU_ITEMS]
+        prompt_texto = "[bold cyan]➤ Escolha uma opção[/bold cyan]"
+        opcao = Prompt.ask(prompt_texto, choices=opcoes_validas, default="0")
+
         if opcao == "0":
             limpar_tela()
-            console.print(Align.center(Panel.fit(
-                "[bold yellow]👋 Saindo... Até logo![/bold yellow]",
+            mensagem_saida = Panel.fit(
+                "[bold yellow]Saindo... Ate logo![/bold yellow]",
                 border_style="yellow",
-                padding=(1, 3)
-            )))
+                padding=(1, 3),
+            )
+            console.print(Align.center(mensagem_saida))
             break
-            
-        elif opcao == "1":
-            adicionar()
-            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
-            
-        elif opcao == "2":
-            listar()
-            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
-            
-        elif opcao == "3":
-            termo = Prompt.ask("[bold]Digite o nome para buscar[/bold]")
-            buscar(termo)
-            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
-            
-        elif opcao == "4":
-            id_str = Prompt.ask("[bold]ID do contato a modificar[/bold]")
-            if id_str.isdigit():
-                modificar(int(id_str))
-            else:
-                console.print("[red]❌ ID inválido![/red]")
-            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
-            
-        elif opcao == "5":
-            id_str = Prompt.ask("[bold]ID do contato a remover[/bold]")
-            if id_str.isdigit():
-                remover(int(id_str))
-            else:
-                console.print("[red]❌ ID inválido![/red]")
-            Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
-            
-        elif opcao == "6":
-            formato = Prompt.ask("[bold]Formato[/bold]", choices=["csv", "txt"], default="csv")
-            exportar(formato)
-            Prompt.ask("\n[dim]Pressione Enter para
+
+        acao = handlers.get(opcao)
+        if acao is not None:
+            acao()
+        else:
+            console.print("[red]Opcao invalida![/red]")
+
+        Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")

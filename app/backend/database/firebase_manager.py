@@ -368,6 +368,70 @@ class FirebaseManager:
         except Exception as e:
             logger.error(f"Erro ao exportar contatos: {e}")
             return False, f"Erro ao exportar contatos: {e}"
+
+    def exportar_csv(self, caminho: str = None) -> tuple[bool, str]:
+        """
+        Exporta contatos para arquivo CSV (salvo localmente).
+
+        Args:
+            caminho (str): Caminho do arquivo. Se None, usa 'contatos.csv'
+
+        Returns:
+            tuple[bool, str]: (sucesso, mensagem)
+        """
+        try:
+            if caminho is None:
+                caminho = 'contatos.csv'
+
+            if not self.contatos:
+                return False, "NЖo h  contatos para exportar."
+
+            with open(caminho, 'w', encoding='utf-8') as f:
+                f.write("ID,Nome Completo,Data Nascimento,Email,Telefone,Endere‡o,Nome Pai,Nome MЖe,CPF,RG,Notas\n")
+                for c in self.contatos:
+                    linha = (
+                        f'{c.id},"{c.nome_completo}","{c.data_nascimento}","{c.email}","{c.telefone}",'
+                        f'"{c.endereco}","{c.nome_pai}","{c.nome_mae}","{c.cpf}","{c.rg}","{c.notas}"\n'
+                    )
+                    f.write(linha)
+
+            return True, f"Dados exportados para '{caminho}' com sucesso!"
+        except Exception as e:
+            logger.error(f"Erro ao exportar CSV: {e}")
+            return False, f"Erro ao exportar CSV: {e}"
+
+    def exportar_txt(self, caminho: str = None) -> tuple[bool, str]:
+        """
+        Exporta contatos para arquivo TXT formatado (salvo localmente).
+
+        Args:
+            caminho (str): Caminho do arquivo. Se None, usa 'contatos.txt'
+
+        Returns:
+            tuple[bool, str]: (sucesso, mensagem)
+        """
+        try:
+            if caminho is None:
+                caminho = 'contatos.txt'
+
+            if not self.contatos:
+                return False, "NЖo h  contatos para exportar."
+
+            with open(caminho, 'w', encoding='utf-8') as f:
+                f.write("=" * 74 + "\n")
+                f.write("LISTA DE CONTATOS - PEBBL_\n")
+                f.write("=" * 74 + "\n\n")
+
+                for i, c in enumerate(self.contatos, 1):
+                    f.write(f"[{i}] {str(c)}\n")
+                    f.write("-" * 74 + "\n\n")
+
+                f.write(f"Total de contatos: {len(self.contatos)}\n")
+
+            return True, f"Dados exportados para '{caminho}' com sucesso!"
+        except Exception as e:
+            logger.error(f"Erro ao exportar TXT: {e}")
+            return False, f"Erro ao exportar TXT: {e}"
     
     # ═══════════════════════════════════════════════════════════════════════════
     # OPERAÇÕES STAT

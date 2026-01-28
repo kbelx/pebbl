@@ -290,4 +290,4 @@ Para reportar bugs ou sugerir melhorias, abra uma issue no repositório.
 ---
 
 **Projeto Pebbl_** - Sistema de Gerenciamento de Contatos  
-Desenvolvido em: 18 de Novembro de 2025
+Desenvolvido em: 18 de Setembro de 2025

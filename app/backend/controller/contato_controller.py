@@ -31,16 +31,16 @@ class ContatoController:
     # ═══════════════════════════════════════════════════════════════════════════
     
     def criar_contato(self, 
-                     nome_completo: str,
-                     data_nascimento: str = "",
-                     email: str = "",
-                     telefone: str = "",
-                     endereco: str = "",
-                     nome_pai: str = "",
-                     nome_mae: str = "",
-                     cpf: str = "",
-                     rg: str = "",
-                     notas: str = "") -> Tuple[bool, str]:
+        nome_completo: str,
+        data_nascimento: str = "",
+        email: str = "",
+        telefone: str = "",
+        endereco: str = "",
+        nome_pai: str = "",
+        nome_mae: str = "",
+        cpf: str = "",
+        rg: str = "",
+        notas: str = "") -> Tuple[bool, str]:
         """
         Cria e adiciona um novo contato.
         

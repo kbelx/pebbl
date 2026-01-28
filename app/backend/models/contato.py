@@ -9,9 +9,7 @@
 ################################################################################
 
 from datetime import datetime
-import re
 from app.backend.utils.validators import validar_cpf, validar_rg, validar_email, validar_data, sanitizar_texto
-
 
 class Contato:
     """
@@ -34,17 +32,17 @@ class Contato:
     """
     
     def __init__(self, 
-                 nome_completo: str,
-                 data_nascimento: str = "",
-                 email: str = "",
-                 telefone: str = "",
-                 endereco: str = "",
-                 nome_pai: str = "",
-                 nome_mae: str = "",
-                 cpf: str = "",
-                 rg: str = "",
-                 notas: str = "",
-                 contato_id: int = None):
+        nome_completo: str,
+        data_nascimento: str = "",
+        email: str = "",
+        telefone: str = "",
+        endereco: str = "",
+        nome_pai: str = "",
+        nome_mae: str = "",
+        cpf: str = "",
+        rg: str = "",
+        notas: str = "",
+        contato_id: int = None):
         """
         Inicializa um novo contato.
         

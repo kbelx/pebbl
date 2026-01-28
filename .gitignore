@@ -7,6 +7,7 @@ VENV/
 
 # Arquivos de Python compilado
 __pycache__/
+__init__
 *.py[cod]
 *$py.class
 *.so
@@ -55,3 +56,5 @@ logs/
 # Sistema operacional
 Thumbs.db
 .DS_Store
+
+__init__/

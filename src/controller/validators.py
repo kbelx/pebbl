@@ -1,10 +1,10 @@
 ################################################################################
 #  
-#	FILE: 	<validators.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<18 Novembro 2025>
-#	WHAT:	<Funções utilitárias de validação>
+#	FILE: 	validators.py
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	18 11 2025
+#	WHAT:	Funções utilitárias de validação
 #
 ################################################################################
 

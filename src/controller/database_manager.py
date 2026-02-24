@@ -1,10 +1,10 @@
 ################################################################################
 #  
-#	FILE: 	<database_manager.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<18 Novembro 2025>
-#	WHAT:	<Gerenciador de banco de dados usando JSON>
+#	FILE: 	database_manager.py
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	18 11 2025
+#	WHAT:	Gerenciador de banco de dados usando JSON
 #
 ################################################################################
 

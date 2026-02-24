@@ -1,10 +1,10 @@
 ################################################################################
 #  
-#	FILE: 	<contato.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<18 Novembro 2025>
-#	WHAT:	<Modelo de dados para Contato>
+#	FILE: 	contato.py
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	18 11 2025
+#	WHAT:	Modelo de dados para Contato
 #
 ################################################################################
 

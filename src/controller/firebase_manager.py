@@ -1,10 +1,10 @@
 ################################################################################
 #  
-#	FILE: 	<firebase_manager.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<09 Dezembro 2025>
-#	WHAT:	<Gerenciador de banco de dados usando Firebase Realtime Database>
+#	FILE: 	firebase_manager.py
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	09 12 2025
+#	WHAT:	Gerenciador de banco de dados usando Firebase Realtime Database
 #
 ################################################################################
 
@@ -49,7 +49,7 @@ class FirebaseManager:
         try:
             if credentials_path is None:
                 # Procura por arquivo de credenciais na raiz do projeto
-                base_dir = Path(__file__).parent.parent.parent.parent
+                base_dir = Path(__file__).parent.parent.parent
                 credentials_path = str(base_dir / 'serviceAccountKey.json')
             
             # Verifica se o arquivo de credenciais existe

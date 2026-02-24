@@ -1,10 +1,10 @@
 ################################################################################
 #  
-#	FILE: 	<logger.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<18 Novembro 2025>
-#	WHAT:	<Sistema de logging para a aplicação>
+#	FILE: 	logger.py
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	18 11 2025
+#	WHAT:	Sistema de logging para a aplicação
 #
 ################################################################################
 

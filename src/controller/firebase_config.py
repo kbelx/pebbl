@@ -1,10 +1,10 @@
 ################################################################################
 #  
-#	FILE: 	<firebase_config.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<09 Dezembro 2025>
-#	WHAT:	<Configuração e setup do Firebase>
+#	FILE: 	firebase_config.py
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	09 12 2025
+#	WHAT:	Configuração e setup do Firebase
 #
 ################################################################################
 

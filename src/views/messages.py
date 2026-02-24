@@ -1,10 +1,10 @@
 ﻿###############################################################################
 #  
-#	FILE: 	<messages.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<26 Junho 2025>
-#	WHAT:	<Mensagens para tipos de ações>
+#	FILE: 	messages.py
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	26 06 2025
+#	WHAT:	Mensagens para tipos de ações
 #
 ################################################################################
 

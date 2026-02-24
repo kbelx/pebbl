@@ -6,7 +6,7 @@ from rich.panel import Panel
 from rich.prompt import Prompt, Confirm
 from rich.align import Align
 
-from src.view.menu import menu_interativo
+from src.views.menu import menu_interativo
 
 
 def build_app(controller, console):

@@ -1,9 +1,9 @@
 ################################################################################
 #  
 #	FILE: 	<main.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<18 Novembro 2025>
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	18 11 2025
 #	WHAT:	<Entrada principal da aplicação (CLI Moderna)>
 #
 ################################################################################
@@ -14,10 +14,10 @@ import os
 # Adicionar diretório raiz ao path para importar módulos do projeto
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.backend.controller.contato_controller import ContatoController
+from src.controller.contato_controller import ContatoController
 from rich.console import Console
 
-from src.frontend.cli import build_app
+from src.view.cli import build_app
 
 
 console = Console()

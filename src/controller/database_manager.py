@@ -12,8 +12,8 @@ import json
 import os
 from pathlib import Path
 from typing import List, Optional
-from backend.models.contato import Contato
-from backend.utils.logger import Logger
+from models.contato import Contato
+from controller.logger import Logger
 
 logger = Logger.obter_logger("pebbl.database")
 

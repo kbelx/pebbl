@@ -9,7 +9,7 @@
 ################################################################################
 
 from datetime import datetime
-from src.backend.utils.validators import validar_cpf, validar_rg, validar_email, validar_data, sanitizar_texto
+from src.controller.validators import validar_cpf, validar_rg, validar_email, validar_data, sanitizar_texto
 
 class Contato:
     """

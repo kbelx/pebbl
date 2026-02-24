@@ -9,8 +9,8 @@
 ################################################################################
 
 from typing import List, Optional, Tuple
-from src.backend.models.contato import Contato
-from src.backend.database.firebase_manager import FirebaseManager
+from src.models.contato import Contato
+from src.controller.firebase_manager import FirebaseManager
 
 #db = FirebaseManager()
 

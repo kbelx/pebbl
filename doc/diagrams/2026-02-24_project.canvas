@@ -1,0 +1,25 @@
+{
+	"nodes":[
+		{"id":"1140508139d30a2d","x":-480,"y":-1515,"width":800,"height":1384,"color":"#4f57c4","type":"group","label":"frontend"},
+		{"id":"71b91f9bb5e4d1bb","x":-2320,"y":-1520,"width":760,"height":1389,"color":"#d4b440","type":"group","label":"backend"},
+		{"id":"f2ac214e2f4ad342","x":-269,"y":-1076,"width":469,"height":516,"color":"3","type":"group","label":"utils"},
+		{"id":"8f9421ad70ca6067","x":-2140,"y":-1220,"width":400,"height":340,"color":"3","type":"group","label":"database"},
+		{"id":"771cb34b351f07fd","x":-2140,"y":-580,"width":400,"height":260,"color":"3","type":"group","label":"utils"},
+		{"id":"04666fa465a42321","x":-2140,"y":-800,"width":400,"height":140,"color":"1","type":"group","label":"models"},
+		{"id":"2399136fcbcfb4f3","x":-2140,"y":-1440,"width":400,"height":140,"color":"2","type":"group","label":"controller"},
+		{"id":"a8dfe72746680a28","x":-1360,"y":-2440,"width":123,"height":60,"type":"text","text":"`main.()`"},
+		{"id":"be78a252178373c7","x":-440,"y":-1480,"width":101,"height":60,"type":"text","text":"``cli.py``"},
+		{"id":"36e06f8bfca343c9","x":-2060,"y":-1400,"width":240,"height":60,"type":"text","text":"``contato_controller.py``"},
+		{"id":"9248764ff31262a8","x":-2037,"y":-1080,"width":177,"height":60,"type":"text","text":"firebase_config.py"},
+		{"id":"27c9c39dc5325e81","x":-2051,"y":-980,"width":205,"height":60,"type":"text","text":"firebase_manager.py"},
+		{"id":"79cd2d05a9142eb8","x":-2056,"y":-1180,"width":214,"height":60,"type":"text","text":"database_manager.py"},
+		{"id":"2964783a6df2233f","x":-2020,"y":-760,"width":141,"height":60,"type":"text","text":"``contato.py``"},
+		{"id":"206a9f2d130a3b4b","x":-2028,"y":-540,"width":158,"height":60,"type":"text","text":"``logger.py``"},
+		{"id":"5d1a3e2352717d3c","x":-2027,"y":-420,"width":156,"height":60,"type":"text","text":"``validators.py``"},
+		{"id":"5233d1155ac5d11e","x":-354,"y":-1277,"width":114,"height":60,"type":"text","text":"`menu.py`"}
+	],
+	"edges":[
+		{"id":"c58b16c762488d44","fromNode":"a8dfe72746680a28","fromSide":"bottom","toNode":"71b91f9bb5e4d1bb","toSide":"top"},
+		{"id":"f7728e7d20684397","fromNode":"a8dfe72746680a28","fromSide":"bottom","toNode":"1140508139d30a2d","toSide":"top"}
+	]
+}

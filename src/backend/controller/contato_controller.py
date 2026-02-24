@@ -1,16 +1,16 @@
 ################################################################################
 #  
-#	FILE: 	<contato_controller.py>
-#	BY	: 	<kbelx_>
-#	FOR	:	<HARRP_>
-#	ON	:	<18 Novembro 2025>
-#	WHAT:	<Controlador para gerenciar operações de contatos>
+#	FILE: 	contato_controller.py
+#	BY	: 	Bruno Costa
+#	FOR	:	Pebbl_
+#	ON	:	18 11 2025
+#	WHAT:	Controlador para gerenciar operações de contatos
 #
 ################################################################################
 
 from typing import List, Optional, Tuple
-from app.backend.models.contato import Contato
-from app.backend.database.firebase_manager import FirebaseManager
+from src.backend.models.contato import Contato
+from src.backend.database.firebase_manager import FirebaseManager
 
 #db = FirebaseManager()
 

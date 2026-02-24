@@ -11,8 +11,8 @@
 import firebase_admin
 from firebase_admin import credentials, db
 from typing import List, Optional
-from app.backend.models.contato import Contato
-from app.backend.utils.logger import Logger
+from src.backend.models.contato import Contato
+from src.backend.utils.logger import Logger
 import os
 from pathlib import Path
 

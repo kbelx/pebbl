@@ -17,11 +17,11 @@ def validar_cpf(cpf: str) -> bool:
     """
     Valida um número de CPF (Cadastro de Pessoas Físicas) brasileiro.
     
-    Args:
-        cpf (str): O CPF a ser validado (com ou sem pontuação).
+    ### Args:
+        `cpf (str)`: O CPF a ser validado (_com ou sem pontuação_).
         
-    Returns:
-        bool: True se o CPF for válido, False caso contrário.
+    ### Returns:
+        bool: `True` se o CPF for válido, `False` caso contrário.
     """
     if not cpf or not isinstance(cpf, str):
         return False

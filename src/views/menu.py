@@ -3,7 +3,6 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.align import Align
 
-
 MENU_ITEMS = [
     ("1", "[bold green]Adicionar[/bold green] novo contato"),
     ("2", "[bold blue]Listar[/bold blue] todos os contatos"),
@@ -20,14 +19,14 @@ def menu_interativo(console, limpar_tela, handlers):
     while True:
         limpar_tela()
 
-        header_texto = "[bold cyan]PEBBL_ - Gerenciador de Contatos[/bold cyan]"
+        header_texto = "[bold cyan]PEBBL_ - Gerenciador de Contatos via CLI[/bold cyan]"
         header = Panel.fit(
             header_texto,
             border_style="cyan",
             padding=(1, 2),
         )
 
-        menu_table = Table(show_header=False, show_footer=False, padding=(0, 2), border_style="dim cyan")
+        menu_table = Table(show_header=False, show_footer=False, padding=(0, 3), border_style="dim cyan")
         menu_table.add_column(style="cyan", no_wrap=True, width=8)
         menu_table.add_column(style="white")
 
@@ -60,3 +59,4 @@ def menu_interativo(console, limpar_tela, handlers):
             console.print("[red]Opcao invalida![/red]")
 
         Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
+

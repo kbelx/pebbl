@@ -5,20 +5,6 @@ import os
 import sys
 from pathlib import Path
 
-def validar_args():
-    """Bloqueia comandos da interface gráfica removida."""
-    if len(sys.argv) < 2:
-        return
-
-    comando = sys.argv[1].strip().lower()
-    if comando in ("gui", "tk", "tkinter", "PySide"):
-        print(
-            "A interface grafica foi removida. "
-            "Use `python run.py` ou `python -m app.main <comando>`."
-        )
-        sys.exit(0)
-
-
 def carregar_env():
     """Carrega variáveis de ambiente do arquivo .env, se existir."""
     env_path = Path(".env")
@@ -42,7 +28,7 @@ def carregar_env():
         chave, valor = conteudo.split("=", 1)
         os.environ[chave.strip()] = valor.strip()
 
-validar_args()
+
 carregar_env()
 
 from src.main import app

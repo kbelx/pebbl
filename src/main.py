@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.controller.contato_controller import ContatoController
 from rich.console import Console
 
-from src.views.cli import build_app
+from src.views.cli.cli import build_app
 
 
 console = Console()

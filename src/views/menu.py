@@ -3,6 +3,9 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.align import Align
 
+# ======================================================================================================================
+# Opções do Menu
+
 MENU_ITEMS = [
     ("1", "[bold green]Adicionar[/bold green] novo contato"),
     ("2", "[bold blue]Listar[/bold blue] todos os contatos"),
@@ -13,36 +16,69 @@ MENU_ITEMS = [
     ("0", "[bold red]Sair[/bold red]"),
 ]
 
+# ======================================================================================================================
+
+def tituloMenu():
+    """Cria o título principal do menu"""
+
+    # Define o título principal
+    header_texto = "[bold cyan]PEBBL_ - Gerenciador de Contatos via CLI[/bold cyan]"
+
+    # Cria um design no título
+    header = Panel.fit(
+        header_texto,
+        border_style="cyan",
+        padding=(1, 2),
+    )
+
+    return header
+
+# ======================================================================================================================
+
+def opcoesMenu():
+    """Define o layout e cria das opções do menu"""
+
+    menu_table = Table(show_header=False, 
+                       show_footer=False, 
+                       padding=(0, 3), 
+                       border_style="dim cyan")
+    
+    menu_table.add_column(style="cyan", 
+                          no_wrap=True, 
+                          width=8)
+    
+    menu_table.add_column(style="white")
+
+    for opcao, descricao in MENU_ITEMS:
+        menu_table.add_row(f"[ {opcao} ]", descricao)
+
+    return menu_table
+
+# ======================================================================================================================
+
+def inputMenu() -> str:
+    """Lida com a entrada de usuário no menu principal"""
+
+    opcoes_validas = [item[0] for item in MENU_ITEMS]
+    prompt_texto = "[bold cyan]➤ Escolha uma opção[/bold cyan]"
+    opcao = Prompt.ask(prompt_texto, choices=opcoes_validas, default="0")
+
+    return opcao
+
+# ======================================================================================================================
 
 def menu_interativo(console, limpar_tela, handlers):
     """Exibe o menu principal interativo."""
+
     while True:
         limpar_tela()
 
-        header_texto = "[bold cyan]PEBBL_ - Gerenciador de Contatos via CLI[/bold cyan]"
-        header = Panel.fit(
-            header_texto,
-            border_style="cyan",
-            padding=(1, 2),
-        )
-
-        menu_table = Table(show_header=False, show_footer=False, padding=(0, 3), border_style="dim cyan")
-        menu_table.add_column(style="cyan", no_wrap=True, width=8)
-        menu_table.add_column(style="white")
-
-        for opcao, descricao in MENU_ITEMS:
-            menu_table.add_row(f"[ {opcao} ]", descricao)
-
-        console.print(Align.center(header))
+        console.print(Align.center(tituloMenu()))
         console.print()
-        console.print(Align.center(menu_table))
+        console.print(Align.center(opcoesMenu()))
         console.print()
 
-        opcoes_validas = [item[0] for item in MENU_ITEMS]
-        prompt_texto = "[bold cyan]➤ Escolha uma opção[/bold cyan]"
-        opcao = Prompt.ask(prompt_texto, choices=opcoes_validas, default="0")
-
-        if opcao == "0":
+        if inputMenu() == "0":
             limpar_tela()
             mensagem_saida = Panel.fit(
                 "[bold yellow]Saindo... Ate logo![/bold yellow]",
@@ -52,7 +88,7 @@ def menu_interativo(console, limpar_tela, handlers):
             console.print(Align.center(mensagem_saida))
             break
 
-        acao = handlers.get(opcao)
+        acao = handlers.get(inputMenu())
         if acao is not None:
             acao()
         else:

@@ -36,6 +36,7 @@ class FirebaseManager:
             cls._instance._inicializado = False
         return cls._instance
     
+
     def __init__(self, credentials_path: str = None):
         """
         Inicializa o gerenciador de banco de dados Firebase.
@@ -48,9 +49,7 @@ class FirebaseManager:
             
         try:
             if credentials_path is None:
-                # Procura por arquivo de credenciais na raiz do projeto
-                base_dir = Path(__file__).parent.parent.parent
-                credentials_path = str(base_dir / 'serviceAccountKey.json')
+                credentials_path = self._obter_caminho_credencial()
             
             # Verifica se o arquivo de credenciais existe
             if not os.path.exists(credentials_path):
@@ -78,21 +77,78 @@ class FirebaseManager:
             raise Exception(f"Erro ao inicializar Firebase: {e}")
     
     @staticmethod
+    def _obter_caminho_credencial() -> str:
+        """Obtém o primeiro caminho válido para o arquivo de credenciais."""
+        caminhos = [
+            Path(__file__).resolve().parents[1] / 'tokens' / 'serviceAccountKey.json',  # src/tokens/
+            Path(__file__).resolve().parents[2] / 'tokens' / 'serviceAccountKey.json',  # tokens/ (raiz)
+            Path(__file__).resolve().parents[2] / 'serviceAccountKey.json',             # raiz
+        ]
+
+        for caminho in caminhos:
+            if caminho.exists():
+                return str(caminho)
+
+        return str(caminhos[0])
+
+    @staticmethod
+    def _carregar_variavel_de_env(chave: str) -> Optional[str]:
+        """
+        Tenta encontrar uma variável em arquivos .env conhecidos e injeta no ambiente.
+        """
+        caminhos_env = [
+            Path(__file__).resolve().parents[1] / 'tokens' / '.env',  # src/tokens/.env
+            Path(__file__).resolve().parents[2] / 'tokens' / '.env',  # tokens/.env
+            Path(__file__).resolve().parents[2] / '.env',             # .env na raiz
+            Path.cwd() / 'tokens' / '.env',                           # cwd/tokens/.env
+            Path.cwd() / '.env',                                      # cwd/.env
+        ]
+
+        for caminho in caminhos_env:
+            if not caminho.exists():
+                continue
+
+            try:
+                with caminho.open("r", encoding="utf-8") as arquivo:
+                    for linha in arquivo:
+                        conteudo = linha.strip()
+                        if not conteudo or conteudo.startswith("#") or "=" not in conteudo:
+                            continue
+
+                        nome, valor = conteudo.split("=", 1)
+                        if nome.strip() == chave and valor.strip():
+                            os.environ[chave] = valor.strip()
+                            logger.debug(f"Variável {chave} carregada de {caminho}")
+                            return valor.strip()
+            except OSError as erro:
+                logger.warning(f"Falha ao ler arquivo de ambiente {caminho}: {erro}")
+
+        return None
+
+
+    @staticmethod
     def _obter_database_url() -> str:
         """
         Obtém a URL do banco de dados Firebase das variáveis de ambiente.
         
-        Returns:
-            str: URL do banco de dados
+        ### Returns:
+            ``str``: URL do banco de dados
         """
+
         url = os.getenv('FIREBASE_DATABASE_URL')
-        if not url:
-            raise ValueError(
-                "Variável de ambiente FIREBASE_DATABASE_URL não definida. "
-                "Configure-a com a URL do seu banco de dados Firebase."
-            )
-        return url
+        if url:
+            return url
+
+        url = FirebaseManager._carregar_variavel_de_env('FIREBASE_DATABASE_URL')
+        if url:
+            return url
+
+        raise ValueError(
+            "Variável de ambiente FIREBASE_DATABASE_URL não definida. "
+            "Defina a variável no ambiente ou adicione em src/tokens/.env."
+        )
     
+
     def _carregar_dados(self):
         """Carrega dados do Firebase Realtime Database."""
         try:
@@ -113,6 +169,7 @@ class FirebaseManager:
             logger.error(f"Erro ao carregar dados do Firebase: {e}")
             raise Exception(f"Erro ao carregar dados do Firebase: {e}")
     
+
     def _salvar_dados(self):
         """Salva dados no Firebase Realtime Database."""
         try:
@@ -129,12 +186,14 @@ class FirebaseManager:
             logger.error(f"Erro ao salvar dados no Firebase: {e}")
             raise Exception(f"Erro ao salvar dados no Firebase: {e}")
     
+
     def _gerar_id(self) -> int:
         """Gera um novo ID único."""
         self.ultimo_id += 1
         self._salvar_dados()  # Salva imediatamente para garantir consistência
         return self.ultimo_id
     
+
     def _realocarealocar_ids(self):
         """
         Realoca os IDs dos contatos de acordo com ordem alfabética do nome.
@@ -295,6 +354,7 @@ class FirebaseManager:
         nome_lower = nome.lower()
         return [c for c in self.contatos if nome_lower in c.nome_completo.lower()]
     
+
     def buscar_por_email(self, email: str) -> Optional[Contato]:
         """
         Busca um contato pelo email.
@@ -310,6 +370,7 @@ class FirebaseManager:
                 return contato
         return None
     
+
     def buscar_por_telefone(self, telefone: str) -> Optional[Contato]:
         """
         Busca um contato pelo telefone.
@@ -325,6 +386,7 @@ class FirebaseManager:
                 return contato
         return None
     
+
     def buscar_por_cpf(self, cpf: str) -> Optional[Contato]:
         """
         Busca um contato pelo CPF.
@@ -369,6 +431,7 @@ class FirebaseManager:
             logger.error(f"Erro ao exportar contatos: {e}")
             return False, f"Erro ao exportar contatos: {e}"
 
+
     def exportar_csv(self, caminho: str = None) -> tuple[bool, str]:
         """
         Exporta contatos para arquivo CSV (salvo localmente).
@@ -399,6 +462,7 @@ class FirebaseManager:
         except Exception as e:
             logger.error(f"Erro ao exportar CSV: {e}")
             return False, f"Erro ao exportar CSV: {e}"
+
 
     def exportar_txt(self, caminho: str = None) -> tuple[bool, str]:
         """

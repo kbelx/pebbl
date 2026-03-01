@@ -1,6 +1,5 @@
+# importações de Frameworks
 import typer
-
-# importações Rich
 from rich.prompt import Prompt
 
 # Importações do Projeto
@@ -96,5 +95,7 @@ def build_app(controller, console):
         """
         if ctx.invoked_subcommand is None:
             executar_menu()
+
+    executar_menu()
 
     return app

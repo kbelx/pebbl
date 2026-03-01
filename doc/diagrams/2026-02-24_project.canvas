@@ -1,23 +1,19 @@
 {
 	"nodes":[
-		{"id":"2399136fcbcfb4f3","x":-1280,"y":-1440,"width":400,"height":640,"color":"2","type":"group","label":"controller"},
-		{"id":"1140508139d30a2d","x":-480,"y":-1515,"width":280,"height":445,"color":"#4f57c4","type":"group","label":"views"},
-		{"id":"04666fa465a42321","x":-2080,"y":-1260,"width":400,"height":140,"color":"1","type":"group","label":"models"},
-		{"id":"a8dfe72746680a28","x":-1360,"y":-2440,"width":123,"height":60,"type":"text","text":"`main.()`"},
-		{"id":"36e06f8bfca343c9","x":-1200,"y":-1400,"width":240,"height":60,"type":"text","text":"``contato_controller.py``"},
-		{"id":"79cd2d05a9142eb8","x":-1187,"y":-1300,"width":214,"height":60,"type":"text","text":"database_manager.py"},
-		{"id":"9248764ff31262a8","x":-1168,"y":-1200,"width":177,"height":60,"type":"text","text":"firebase_config.py"},
-		{"id":"27c9c39dc5325e81","x":-1182,"y":-1100,"width":205,"height":60,"type":"text","text":"firebase_manager.py"},
-		{"id":"206a9f2d130a3b4b","x":-1160,"y":-1000,"width":158,"height":60,"type":"text","text":"``logger.py``"},
-		{"id":"5d1a3e2352717d3c","x":-1157,"y":-920,"width":156,"height":60,"type":"text","text":"``validators.py``"},
-		{"id":"be78a252178373c7","x":-389,"y":-1480,"width":101,"height":60,"type":"text","text":"``cli.py``"},
-		{"id":"5233d1155ac5d11e","x":-395,"y":-1340,"width":114,"height":60,"type":"text","text":"`menu.py`"},
-		{"id":"b57084f8dab725bc","x":-406,"y":-1200,"width":135,"height":60,"type":"text","text":"messages.py"},
-		{"id":"2964783a6df2233f","x":-1960,"y":-1220,"width":141,"height":60,"type":"text","text":"``contato.py``"}
+		{"id":"2399136fcbcfb4f3","type":"group","x":-1600,"y":-2035,"width":400,"height":640,"color":"2","label":"controller"},
+		{"id":"04666fa465a42321","type":"group","x":-2600,"y":-2320,"width":320,"height":685,"color":"1","label":"models"},
+		{"id":"1140508139d30a2d","type":"group","x":-480,"y":-2160,"width":280,"height":445,"color":"#4f57c4","label":"views"},
+		{"id":"27c9c39dc5325e81","type":"text","text":"firebase_manager.py","x":-1502,"y":-1695,"width":205,"height":60},
+		{"id":"206a9f2d130a3b4b","type":"text","text":"``logger.py``","x":-1480,"y":-1595,"width":158,"height":60},
+		{"id":"5d1a3e2352717d3c","type":"text","text":"``validators.py``","x":-1477,"y":-1515,"width":156,"height":60},
+		{"id":"9248764ff31262a8","type":"text","text":"firebase_config.py","x":-1488,"y":-1795,"width":177,"height":60},
+		{"id":"79cd2d05a9142eb8","type":"text","text":"database_manager.py","x":-1507,"y":-1895,"width":214,"height":60},
+		{"id":"36e06f8bfca343c9","type":"text","text":"``contato_controller.py``","x":-1520,"y":-1995,"width":240,"height":60},
+		{"id":"931e85a4b1588421","x":-2520,"y":-2280,"width":134,"height":60,"type":"text","text":"contatos.py"},
+		{"id":"b57084f8dab725bc","type":"text","text":"messages.py","x":-406,"y":-1845,"width":135,"height":60},
+		{"id":"5233d1155ac5d11e","type":"text","text":"`menu.py`","x":-395,"y":-1985,"width":114,"height":60},
+		{"id":"be78a252178373c7","type":"text","text":"``cli.py``","x":-389,"y":-2125,"width":101,"height":60},
+		{"id":"a8dfe72746680a28","type":"text","text":"main.py","x":-1480,"y":-2760,"width":119,"height":50}
 	],
-	"edges":[
-		{"id":"f7728e7d20684397","fromNode":"a8dfe72746680a28","fromSide":"bottom","toNode":"1140508139d30a2d","toSide":"top"},
-		{"id":"8fb236c8261725a2","fromNode":"2399136fcbcfb4f3","fromSide":"top","toNode":"a8dfe72746680a28","toSide":"bottom"},
-		{"id":"74c77edc5f1b4d1c","fromNode":"04666fa465a42321","fromSide":"top","toNode":"a8dfe72746680a28","toSide":"bottom"}
-	]
+	"edges":[]
 }

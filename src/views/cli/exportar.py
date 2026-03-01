@@ -11,14 +11,14 @@
 import typer
 
 
-def exportar(controller, console, formato: str = typer.Option("csv", help="Formato de exportacao: csv ou txt")):
+def exportar(controller, console, formato: str = typer.Option("csv", help="Formato de exportação: csv ou txt")):
     """
     Exporta todos os contatos para um arquivo.
     """
     formato = formato.lower()
 
     if formato not in ["csv", "txt"]:
-        console.print(f"[bold red]Erro:[/bold red] Formato '{formato}' invalido. Use 'csv' ou 'txt'.")
+        console.print(f"[bold red]Erro:[/bold red] Formato '{formato}' inválido! Use 'csv' ou 'txt'.")
         return
 
     if formato == "csv":

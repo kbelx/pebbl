@@ -78,21 +78,23 @@ def menu_interativo(console, limpar_tela, handlers):
         console.print(Align.center(opcoesMenu()))
         console.print()
 
-        if inputMenu() == "0":
+        opcao = inputMenu()
+        
+        if opcao == "0":
             limpar_tela()
             mensagem_saida = Panel.fit(
-                "[bold yellow]Saindo... Ate logo![/bold yellow]",
+                "[bold yellow]Saindo... Até logo![/bold yellow]",
                 border_style="yellow",
                 padding=(1, 3),
             )
             console.print(Align.center(mensagem_saida))
             break
 
-        acao = handlers.get(inputMenu())
+        acao = handlers.get(opcao)
         if acao is not None:
             acao()
         else:
-            console.print("[red]Opcao invalida![/red]")
+            console.print("[red]Opção inválida![/red]")
 
         Prompt.ask("\n[dim]Pressione Enter para voltar ao menu[/dim]")
 

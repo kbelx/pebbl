@@ -42,8 +42,9 @@ class Logger:
         logger.handlers.clear()
         
         # Criar diretório de logs se não existir
-        log_dir = Path(__file__).parent.parent.parent.parent / "logs"
-        log_dir.mkdir(exist_ok=True)
+        repo_root = Path(__file__).resolve().parents[2]
+        log_dir = repo_root / "logs"
+        log_dir.mkdir(exist_ok=True, parents=True)
         
         # Handler para arquivo
         arquivo_log = log_dir / f"pebbl_{datetime.now().strftime('%Y%m%d')}.log"
